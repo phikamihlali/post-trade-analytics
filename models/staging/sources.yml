@@ -1,0 +1,16 @@
+version: 2
+
+sources:
+  - name: bronze
+    database: post_trade_db
+    schema: bronze
+    description: "Raw landing zone for untransformed post-trade feeds."
+    loaded_at_field: _loaded_at
+    freshness:
+      warn_after: {count: 6, period: hour}
+      error_after: {count: 24, period: hour}
+    tables:
+      - name: bronze_trades
+        description: "Raw execution fills from trading venues (synthetic)."
+      - name: bronze_market_feed
+        description: "5-minute VWAP/TWAP benchmarks per symbol (synthetic)."
