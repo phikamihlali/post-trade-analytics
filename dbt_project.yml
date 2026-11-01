@@ -1,0 +1,18 @@
+name: post_trade_project
+version: "1.0.0"
+config-version: 2
+profile: post_trade_project
+
+model-paths: ["models"]
+test-paths: ["tests"]
+
+models:
+  post_trade_project:
+    staging:
+      +schema: silver
+      +materialized: view
+    intermediate:
+      +schema: silver
+      +materialized: view
+    marts:
+      +schema: gold
