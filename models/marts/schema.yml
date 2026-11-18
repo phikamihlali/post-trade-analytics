@@ -1,0 +1,29 @@
+version: 2
+
+models:
+  - name: fct_clearing_ledger
+    columns:
+      - name: settlement_ledger_id
+        data_tests:
+          - unique
+          - not_null
+      - name: cash_settlement_direction
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['PAYER', 'RECEIVER', 'NET_ZERO']
+
+  - name: exceptions_trades
+    columns:
+      - name: exception_reason
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - MISSING_OR_BAD_TIMESTAMP
+                  - MISSING_OR_BAD_PRICE
+                  - MISSING_COUNTERPARTY
+                  - CURRENCY_VENUE_MISMATCH
+                  - PRICE_SLIPPAGE_OVER_100BPS
+                  - DUPLICATE_TRADE_ID
