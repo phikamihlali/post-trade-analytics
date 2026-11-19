@@ -1,5 +1,5 @@
-WITH expected AS (
-    SELECT COUNT(*) AS n
+WITH deduped AS (
+    SELECT trade_id
     FROM {{ ref('int_trade_enrichment') }}
     WHERE is_valid_record
         AND (
@@ -10,6 +10,10 @@ WITH expected AS (
     QUALIFY ROW_NUMBER() OVER (
         PARTITION BY trade_id ORDER BY execution_timestamp
     ) = 1
+),
+
+expected AS (
+    SELECT COUNT(*) AS n FROM deduped
 ),
 
 actual AS (
