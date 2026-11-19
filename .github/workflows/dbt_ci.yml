@@ -1,0 +1,45 @@
+name: dbt_ci
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  parse:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dbt
+        run: pip install dbt-snowflake
+
+      - name: Dummy profile (no real credentials)
+        run: |
+          mkdir -p ~/.dbt
+          cat > ~/.dbt/profiles.yml <<EOF
+          post_trade_project:
+            target: ci
+            outputs:
+              ci:
+                type: snowflake
+                account: dummy
+                user: dummy
+                password: dummy
+                role: dummy
+                warehouse: dummy
+                database: dummy
+                schema: dummy
+                threads: 1
+          EOF
+
+      - name: Install packages
+        run: dbt deps
+
+      - name: Parse project
+        run: dbt parse
